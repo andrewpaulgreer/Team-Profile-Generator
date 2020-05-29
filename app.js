@@ -12,7 +12,13 @@ const render = require("./lib/htmlRenderer");
 
 
 // Write code to use inquirer to gather information about the development team members,
-const teamPrompt = () => {
+
+
+const teamArr = []
+
+const askQuestions = () =>{
+
+function teamPrompt(){
 inquirer.prompt([
     {
     type: "input",
@@ -29,11 +35,15 @@ inquirer.prompt([
     name: "email",
     message: "Please provide your email"
     },
+    
 ])
+// .then(answer => {
+//     const Employee = new Employee(answer.name, answer.id, answer.email, answer.officeNumber)
+//     teamArr.push(Employee);
+// })
 }
-teamPrompt()
-
-const chooseTeam = () => {
+// find a way to get this to actually call on the employee type.
+function chooseTeam(){
 inquirer.prompt([
     {
     type: "list",
@@ -44,44 +54,64 @@ inquirer.prompt([
 ]).then(choice => {
     switch(choice.userchoice){
     case "Manager": addManager();
+    break;
     case "Engineer": addEngineer();
+    break;
     case "Intern": addIntern();
+    break;
+    default:
+    teamPrompt();
     }
 })
 }
-chooseTeam();
 
-const addManager = () => {
-inquierer.prompt()([
+
+function addManager () {
+inquirer.prompt()([
     {
     type: "input",
     name: "officeNumber",
     message: "Please Enter Your Office Number:"
     },
-    ])
+    ]).then(answer => {
+        const Manager = new Manager(answer.name, answer.id, answer.email, answer.officeNumber)
+        teamArr.push(Manager);
+        chooseTeam()
+    })
 }
-addManager()
-const addEngineer = () => {
-    inquierer.prompt()([
+
+function addEngineer () {
+    inquirer.prompt()([
         {
         type: "input",
         name: "github",
         message: "Please Enter Your GitHub Username:"
         },
-        ])
+        ]).then(answer => {
+            const Engineer = new Engineer(answer.name, answer.id, answer.email, answer.github)
+            teamArr.push(Engineer);
+            chooseTeam();
+        })
     }
-addEngineer();
 
-const addIntern = () => {
-    inquierer.prompt()([
+
+
+function addIntern () {
+    inquirer.prompt()([
         {
         type: "input",
         name: "school",
         message: "Please Enter the name of your School:"
         },
-        ])
-    }
-addIntern();
+        ]).then(answer => {
+            const Intern = new Intern(answer.name, answer.id, answer.email, answer.school)
+            teamArr.push(Intern);
+            chooseTeam();
+        })
+}
+teamPrompt();
+}
+askQuestions();
 
 // and to create objects for each team member (using the correct classes as blueprints!)
 
