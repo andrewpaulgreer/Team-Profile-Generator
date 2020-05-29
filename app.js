@@ -5,17 +5,17 @@ const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
 
-const OUTPUT_DIR = path.resolve(__dirname, "output");
+const OUTPUT_DIR = path.resolve(__dirname, "output"); // add path for this to be rendered in the output folder, with blank html page
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
 
 // Write code to use inquirer to gather information about the development team members,
+// empty array to push responses into
+const teamArr = [];
 
-
-const teamArr = []
-
+// creating a master funciton for prompting questions/ writing to the 
 const askQuestions = () =>{
 
 function teamPrompt(){
@@ -35,13 +35,12 @@ inquirer.prompt([
     name: "email",
     message: "Please provide your email"
     },
-    
-])
-// .then(answer => {
-//     const Employee = new Employee(answer.name, answer.id, answer.email, answer.officeNumber)
-//     teamArr.push(Employee);
-// })
-}
+    ]).then(() => {
+        chooseTeam();
+    }).catch ((err) => {
+        throw err;
+    })
+
 // find a way to get this to actually call on the employee type.
 function chooseTeam(){
 inquirer.prompt([
@@ -49,7 +48,7 @@ inquirer.prompt([
     type: "list",
     name: "userchoice",
     message: "Which role would you like to add to your team?",
-    choices: ["Manager", "Engineer", "Intern"]
+    choices: ["Manager", "Engineer", "Intern", "I do not want to add anyone else to my team"]
     },
 ]).then(choice => {
     switch(choice.userchoice){
@@ -62,8 +61,11 @@ inquirer.prompt([
     default:
     teamPrompt();
     }
+}).catch ((err) => {
+    throw err;
 })
 }
+
 
 
 function addManager () {
@@ -74,9 +76,9 @@ inquirer.prompt()([
     message: "Please Enter Your Office Number:"
     },
     ]).then(answer => {
-        const Manager = new Manager(answer.name, answer.id, answer.email, answer.officeNumber)
-        teamArr.push(Manager);
-        chooseTeam()
+        const manager = new Manager(answer.name, answer.id, answer.email, answer.officeNumber)
+        teamArr.push(manager);
+        teamPrompt();
     })
 }
 
@@ -88,9 +90,9 @@ function addEngineer () {
         message: "Please Enter Your GitHub Username:"
         },
         ]).then(answer => {
-            const Engineer = new Engineer(answer.name, answer.id, answer.email, answer.github)
-            teamArr.push(Engineer);
-            chooseTeam();
+            const engineer = new Engineer(answer.name, answer.id, answer.email, answer.github)
+            teamArr.push(engineer);
+            teamPrompt();
         })
     }
 
@@ -104,12 +106,19 @@ function addIntern () {
         message: "Please Enter the name of your School:"
         },
         ]).then(answer => {
-            const Intern = new Intern(answer.name, answer.id, answer.email, answer.school)
-            teamArr.push(Intern);
-            chooseTeam();
+            const intern = new Intern(answer.name, answer.id, answer.email, answer.school)
+            teamArr.push(intern);
+            teamPrompt();
         })
 }
+//  create team HTML
+function createTeam(){
+    fs.writeFileSync(outputPath, render(teamArr), "utf-8")
+}
+
+}
 teamPrompt();
+
 }
 askQuestions();
 
