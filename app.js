@@ -24,7 +24,8 @@ function teamPrompt() {
         name: "name",
         message: "Please provide your name",
         validate: (response) => {
-          if (response !== "") { //entered in validaiton so the return msut be a string
+          if (response !== "") {
+            //entered in validaiton so the return msut be a string
             return true;
           } else {
             return "please enter a valid charater input";
@@ -35,7 +36,8 @@ function teamPrompt() {
         type: "input",
         name: "id",
         message: "Please provide your employee ID",
-        validate: (response) => { // created Validation so the user must input a number
+        validate: (response) => {
+          // created Validation so the user must input a number
           const valid = response.match(/^[1-9]\d*$/); // this syntax for the match took a while to reasearch/ get right
           if (valid) {
             return true;
@@ -122,7 +124,7 @@ function addEngineer() {
       {
         type: "input",
         name: "name",
-        message: "Please provide your name",
+        message: "Please provide your Engineer's name",
         validate: (response) => {
           if (response !== "") {
             return true;
@@ -134,7 +136,7 @@ function addEngineer() {
       {
         type: "input",
         name: "id",
-        message: "Please provide your employee ID",
+        message: "Please provide your Engineer's employee ID",
         validate: (response) => {
           const valid = response.match(/^[1-9]\d*$/);
           if (valid) {
@@ -147,7 +149,7 @@ function addEngineer() {
       {
         type: "input",
         name: "email",
-        message: "Please provide your email",
+        message: "Please provide your Engineer's email",
         validate: (response) => {
           if (response !== "") {
             return true;
@@ -159,7 +161,7 @@ function addEngineer() {
       {
         type: "input",
         name: "github",
-        message: "Please Enter Your GitHub Username:",
+        message: "Please Enter Your Engineer's GitHub Username:",
         validate: (response) => {
           if (response !== "") {
             return true;
@@ -190,7 +192,7 @@ function addIntern() {
       {
         type: "input",
         name: "name",
-        message: "Please provide your name",
+        message: "Please provide Intern's your name",
         validate: (response) => {
           if (response !== "") {
             return true;
@@ -202,7 +204,7 @@ function addIntern() {
       {
         type: "input",
         name: "id",
-        message: "Please provide your employee ID",
+        message: "Please provide your Intern's employee ID",
         validate: (response) => {
           const valid = response.match(/^[1-9]\d*$/);
           if (valid) {
@@ -215,7 +217,7 @@ function addIntern() {
       {
         type: "input",
         name: "email",
-        message: "Please provide your email",
+        message: "Please provide Intern's your email",
         validate: (response) => {
           if (response !== "") {
             return true;
@@ -227,7 +229,7 @@ function addIntern() {
       {
         type: "input",
         name: "school",
-        message: "Please Enter the name of your School:",
+        message: "Please Enter the name of your Intern's School:",
         validate: (response) => {
           if (response !== "") {
             return true;
