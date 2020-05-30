@@ -10,117 +10,257 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
-
 // Write code to use inquirer to gather information about the development team members,
 // empty array to push responses into
 const teamArr = [];
 
-// creating a master funciton for prompting questions/ writing to the 
-const askQuestions = () =>{
+// creating different funciton to prompt the user with inquierer
 
-function teamPrompt(){
-inquirer.prompt([
-    {
-    type: "input",
-    name: "name",
-    message: "Please provide your name"
-    },
-    {
-    type: "input",
-    name: "id",
-    message: "Please provide your employee ID"
-    },
-    {
-    type: "input",
-    name: "email",
-    message: "Please provide your email"
-    },
-    ]).then(() => {
-        chooseTeam();
-    }).catch ((err) => {
-        throw err;
+function teamPrompt() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "name",
+        message: "Please provide your name",
+        validate: (response) => {
+          if (response !== "") { //entered in validaiton so the return msut be a string
+            return true;
+          } else {
+            return "please enter a valid charater input";
+          }
+        },
+      },
+      {
+        type: "input",
+        name: "id",
+        message: "Please provide your employee ID",
+        validate: (response) => { // created Validation so the user must input a number
+          const valid = response.match(/^[1-9]\d*$/); // this syntax for the match took a while to reasearch/ get right
+          if (valid) {
+            return true;
+          } else {
+            return "You must endter a number between 1-10";
+          }
+        },
+      },
+      {
+        type: "input",
+        name: "email",
+        message: "Please provide your email",
+        validate: (response) => {
+          if (response !== "") {
+            return true;
+          } else {
+            return "please enter a valid charater input";
+          }
+        },
+      },
+      {
+        type: "input",
+        name: "officeNumber",
+        message: "Please Enter Your Office Number:",
+        validate: (response) => {
+          const valid = response.match(/^[1-9]\d*$/);
+          if (valid) {
+            return true;
+          } else {
+            return "You must endter a valid number";
+          }
+        },
+      },
+    ])
+    .then((answer) => {
+      const manager = new Manager(
+        answer.name,
+        answer.id,
+        answer.email,
+        answer.officeNumber
+      );
+      teamArr.push(manager);
+      chooseTeam();
     })
-
-// find a way to get this to actually call on the employee type.
-function chooseTeam(){
-inquirer.prompt([
-    {
-    type: "list",
-    name: "userchoice",
-    message: "Which role would you like to add to your team?",
-    choices: ["Manager", "Engineer", "Intern", "I do not want to add anyone else to my team"]
-    },
-]).then(choice => {
-    switch(choice.userchoice){
-    case "Manager": addManager();
-    break;
-    case "Engineer": addEngineer();
-    break;
-    case "Intern": addIntern();
-    break;
-    default:
-    teamPrompt();
-    }
-}).catch ((err) => {
-    throw err;
-})
+    .catch((err) => {
+      throw err;
+    });
 }
-
-
-
-function addManager () {
-inquirer.prompt()([
-    {
-    type: "input",
-    name: "officeNumber",
-    message: "Please Enter Your Office Number:"
-    },
-    ]).then(answer => {
-        const manager = new Manager(answer.name, answer.id, answer.email, answer.officeNumber)
-        teamArr.push(manager);
-        teamPrompt();
+// promp the manager to choose their team, picking from either engineer, or intern, also a choice to end adding employees.
+function chooseTeam() {
+  inquirer
+    .prompt([
+      {
+        type: "list",
+        name: "userchoice",
+        message: "Which role would you like to add to your team?",
+        choices: [
+          "Engineer",
+          "Intern",
+          "I do not want to add anyone else to my team",
+        ],
+      },
+    ])
+    .then(({ userchoice }) => {
+      switch (userchoice) {
+        case "Engineer":
+          addEngineer();
+          break;
+        case "Intern":
+          addIntern();
+          break;
+        default:
+          createTeam();
+      }
     })
+    .catch((err) => {
+      throw err;
+    });
 }
-
-function addEngineer () {
-    inquirer.prompt()([
-        {
+// funciton for adding the software engineers
+function addEngineer() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "name",
+        message: "Please provide your name",
+        validate: (response) => {
+          if (response !== "") {
+            return true;
+          } else {
+            return "please enter a valid charater input";
+          }
+        },
+      },
+      {
+        type: "input",
+        name: "id",
+        message: "Please provide your employee ID",
+        validate: (response) => {
+          const valid = response.match(/^[1-9]\d*$/);
+          if (valid) {
+            return true;
+          } else {
+            return "You must endter a number between 1-10";
+          }
+        },
+      },
+      {
+        type: "input",
+        name: "email",
+        message: "Please provide your email",
+        validate: (response) => {
+          if (response !== "") {
+            return true;
+          } else {
+            return "please enter a valid charater input";
+          }
+        },
+      },
+      {
         type: "input",
         name: "github",
-        message: "Please Enter Your GitHub Username:"
+        message: "Please Enter Your GitHub Username:",
+        validate: (response) => {
+          if (response !== "") {
+            return true;
+          } else {
+            return "please enter a valid charater input";
+          }
         },
-        ]).then(answer => {
-            const engineer = new Engineer(answer.name, answer.id, answer.email, answer.github)
-            teamArr.push(engineer);
-            teamPrompt();
-        })
-    }
-
-
-
-function addIntern () {
-    inquirer.prompt()([
-        {
+      },
+    ])
+    .then((answer) => {
+      const engineer = new Engineer(
+        answer.name,
+        answer.id,
+        answer.email,
+        answer.github
+      );
+      teamArr.push(engineer);
+      chooseTeam();
+    })
+    .catch((err) => {
+      throw err;
+    });
+}
+// funciton for adding interns
+function addIntern() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "name",
+        message: "Please provide your name",
+        validate: (response) => {
+          if (response !== "") {
+            return true;
+          } else {
+            return "please enter a valid charater input";
+          }
+        },
+      },
+      {
+        type: "input",
+        name: "id",
+        message: "Please provide your employee ID",
+        validate: (response) => {
+          const valid = response.match(/^[1-9]\d*$/);
+          if (valid) {
+            return true;
+          } else {
+            return "You must endter a number between 1-10";
+          }
+        },
+      },
+      {
+        type: "input",
+        name: "email",
+        message: "Please provide your email",
+        validate: (response) => {
+          if (response !== "") {
+            return true;
+          } else {
+            return "please enter a valid charater input";
+          }
+        },
+      },
+      {
         type: "input",
         name: "school",
-        message: "Please Enter the name of your School:"
+        message: "Please Enter the name of your School:",
+        validate: (response) => {
+          if (response !== "") {
+            return true;
+          } else {
+            return "please enter a valid charater input";
+          }
         },
-        ]).then(answer => {
-            const intern = new Intern(answer.name, answer.id, answer.email, answer.school)
-            teamArr.push(intern);
-            teamPrompt();
-        })
+      },
+    ])
+    .then((answer) => {
+      const intern = new Intern(
+        answer.name,
+        answer.id,
+        answer.email,
+        answer.school
+      );
+      teamArr.push(intern);
+      chooseTeam();
+    })
+    .catch((err) => {
+      throw err;
+    });
 }
 //  create team HTML
-function createTeam(){
-    fs.writeFileSync(outputPath, render(teamArr), "utf-8")
-}
 
+function createTeam() {
+  if (!fs.existsSync(OUTPUT_DIR)) {
+    fs.mkdirSync(OUTPUT_DIR);
+  }
+  fs.writeFileSync(outputPath, render(teamArr), "utf-8");
 }
+// call team prompt funciton
 teamPrompt();
-
-}
-askQuestions();
 
 // and to create objects for each team member (using the correct classes as blueprints!)
 

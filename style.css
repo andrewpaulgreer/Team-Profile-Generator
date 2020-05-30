@@ -1,9 +1,13 @@
-.card-title{
+.intern-header{
     background-color: blue;
-    color: white
+    color: white;
+}
+.manager-header{
+    background-color: blue;
+    color: white;
 }
 
-.list-group-item{
-    background-color: rgb(247, 248, 228);
-    color: black
+.engineer-header{
+    background-color: blue;
+    color: white;
 }
